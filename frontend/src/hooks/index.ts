@@ -11,27 +11,31 @@ export interface Blog {
     }
 }
 
-export const useBlog= ({id }:{id:string})=>{
-    const [ loading , setLoading ] = useState(true);
-    const [ blog ,setBlog ] = useState<Blog[]>([]);
+interface UseBlogReturn {
+    loading: boolean;
+    blog: Blog | null;
+  }
+  
+  export const useBlog = ({ id }: { id: string }): UseBlogReturn => {
+    const [loading, setLoading] = useState(true);
+    const [blog, setBlog] = useState<Blog | null>(null);
+  
 
     useEffect(()=>{
-        axios.get(`${BACKEND_URL}/api/v1/blog/${id}`,{
+        axios.get(`${BACKEND_URL}/api/v1/blog/bulk`,{
             headers:{
                 Authorization:localStorage.getItem("token")
             }
         })
         .then(response =>{
-            setBlog(response.data.blog);
+            setBlog(response.data.blogs);
             setLoading(false);
         })
     },[id])
 
-    return {
-        loading,
-        blog
-    } 
-}
+  
+    return { loading, blog };
+  };
 export const useBlogs = ()=>{
     const [ loading , setLoading ] = useState(true);
     const [ blogs ,setBlogs ] = useState<Blog[]>([]);
